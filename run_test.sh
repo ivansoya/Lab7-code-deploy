@@ -10,7 +10,6 @@ test_server_build()
     g++ server.cpp -o server
     build_status=$?
     assertTrue "Build failed" "[ $build_status -eq 0 ]"
-    echo "Completed!"
 }
 
 test_fail_server1()
