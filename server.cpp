@@ -17,23 +17,19 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in server_address, client_address;
     char buf[1024];
     int bytes_read;
-
     sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) {
         perror("socket");
         exit(1);
     }
-    
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(3425);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-    
     if (bind(sock, (struct sockaddr *)&server_address,
         sizeof(server_address)) < 0) {
         perror("bind");
         exit(2);
     }
-    
     while (1) {
         socklen_t len = sizeof(client_address);
         bytes_read = recvfrom(sock, buf, 1024, 0,
@@ -44,9 +40,7 @@ int main(int argc, char *argv[]) {
         sendto(sock, answer.c_str(), answer.size(), 0,
             (struct sockaddr *)&client_address, len);
     }
-    
     close(sock);
-    
     return 0;
 }
 
