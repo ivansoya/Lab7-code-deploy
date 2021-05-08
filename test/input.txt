@@ -1,5 +1,5 @@
 /home/ivan/text.txt
-/home
+/home/ivan
 /home/ivan/Documents/OS/os-task5-ivansoya/sender.cpp
 sdadsf
 /Base.txt
