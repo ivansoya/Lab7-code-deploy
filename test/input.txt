@@ -1,0 +1,6 @@
+/home/ivan/text.txt
+/home
+/home/ivan/Documents/OS/os-task5-ivansoya/sender.cpp
+sdadsf
+/Base.txt
+/home/ivan/Documents/OS/os-task5-ivansoya/server.cpp
