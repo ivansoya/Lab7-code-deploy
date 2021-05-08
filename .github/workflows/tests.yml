@@ -1,12 +1,6 @@
 name: tests
 
-on:
-  push:
-    paths: 
-      - server.cpp
-      - sender.cpp
-      - .github/workflows/tests.yml
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test:
