@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         std::cin >> str;
         pathes.push_back(str);
     }
-	// std::cout << str << std::endl;
+    // std::cout << str << std::endl;
     int sock;
     struct sockaddr_in addr;
     sock = socket(AF_INET, SOCK_DGRAM, 0);
