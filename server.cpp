@@ -75,8 +75,7 @@ std::string get_disk_size(const char* path) {
     }
 }
 
-bool is_number(const std::string& str)
-{
+bool is_number(const std::string& str) {
     if (*str.begin() == '0') return false;
     std::string::const_iterator it = str.begin();
     while (it != str.end() && std::isdigit(*it)) ++it;
