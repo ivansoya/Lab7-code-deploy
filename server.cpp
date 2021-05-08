@@ -23,38 +23,42 @@ int main(int argc, char *argv[]) {
         perror("socket");
         exit(1);
     }
+    
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(3425);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sock, (struct sockaddr *)&server_address, 
+    
+    if (bind(sock, (struct sockaddr *)&server_address,
         sizeof(server_address)) < 0) {
         perror("bind");
         exit(2);
     }
+    
     while (1) {
         socklen_t len = sizeof(client_address);
-        bytes_read = recvfrom(sock, buf, 1024, 0, 
+        bytes_read = recvfrom(sock, buf, 1024, 0,
         (struct sockaddr *)&client_address, &len);
         buf[bytes_read] = '\0';
         std::string answer = get_disk_size(buf);
         // std::cout << answer << "\n";
-        sendto(sock, answer.c_str(), answer.size(), 0, 
+        sendto(sock, answer.c_str(), answer.size(), 0,
             (struct sockaddr *)&client_address, len);
     }
+    
     close(sock);
+    
     return 0;
 }
 
 std::string get_disk_size(const char* path) {
-	struct statvfs stat;
-	if (statvfs(path, &stat) == 0) {
-	    int64_t free_space = stat.f_bfree * stat.f_frsize;
-	    int64_t close_space = stat.f_blocks * stat.f_frsize;
-	    std::string str;
-	    str = std::to_string(free_space) + " " + std::to_string(close_space);
-	    return str;
-	}
-	else {
-	    return "Incorrect path!";
-	}
+    struct statvfs stat;
+    if (statvfs(path, &stat) == 0) {
+        int64_t free_space = stat.f_bfree * stat.f_frsize;
+        int64_t close_space = stat.f_blocks * stat.f_frsize;
+        std::string str;
+        str = std::to_string(free_space) + " " + std::to_string(close_space);
+        return str;
+    } else {
+        return "Incorrect path!";
+    }
 }
