@@ -8,11 +8,27 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string>
+#include <regex>
 #include <iostream>
 
 std::string get_disk_size(const char* path);
 
 int main(int argc, char *argv[]) {
+    int port;
+    if (argc != 2) {
+        std::cout << "Incorrect number of arguments!" << std::endl;
+        return 1;
+     }
+    std::string str = argv[1];
+    if (std::regex_match(str, std::regex("[1-9][0-9]*")) == false) {
+        std::cout << "Port must be an integer!" << std::endl;
+        return 1;
+    }
+    port = atoi(argv[1]);
+    if (port < 0 || port > 65535) {
+        std::cout << "Port is Incorrect!" << std::endl;
+        return 1;
+    }
     int sock;
     struct sockaddr_in server_address, client_address;
     char buf[1024];
