@@ -17,5 +17,4 @@ jobs:
     - uses: actions/checkout@v2
     - name: Test
       shell: bash
-      run: |
-	 bash run_test.sh -- test_server_build test_fail_server1 test_fail_server2 test_server_configuration
+      run: bash run_test.sh -- test_server_build test_fail_server1 test_fail_server2 test_server_configuration
