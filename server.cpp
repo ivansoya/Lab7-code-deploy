@@ -16,7 +16,7 @@ pthread_t tid[NUMBER_OF_THREADS];
 
 std::string get_disk_size(const char* path);
 bool is_number(const std::string&);
-void* client_proccess(void*); 
+void* client_proccess(void*);
 
 sem_t semaphore;
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < NUMBER_OF_THREADS; i++) {
          if (pthread_create(&tid[i], NULL, &client_proccess, &sock) < 0) {
               std::cout << "Couldn't create thread!/n";
-         } 
+         }
     }
     while (1) { }
     for (int i = 0; i < NUMBER_OF_THREADS; i++) {
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 }
 
 void* client_proccess(void* arg) {
-    int sock = *(int *)arg;
+    int sock = *reinterpret_cast<int *>(arg);
     char buf[1024];
     struct sockaddr_in client_address;
     socklen_t len = sizeof(client_address);
