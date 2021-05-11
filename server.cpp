@@ -11,9 +11,14 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#define NUMBER_OF_THREADS 2
+pthread_t tid[NUMBER_OF_THREADS];
 
 std::string get_disk_size(const char* path);
 bool is_number(const std::string&);
+void* client_proccess(void*); 
+
+sem_t semaphore;
 
 int main(int argc, char *argv[]) {
     int port;
@@ -33,9 +38,12 @@ int main(int argc, char *argv[]) {
         std::cout << "Port is Incorrect!" << std::endl;
         return 1;
     }
+    if (sem_init(&semaphore, 0, 1) != 0) {
+        std::cerr << "Semaphore init failed" << std::endl;
+        return 1;
+    }
     int sock;
-    struct sockaddr_in server_address, client_address;
-    char buf[1024];
+    struct sockaddr_in server_address;
     int bytes_read;
     sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) {
@@ -50,13 +58,17 @@ int main(int argc, char *argv[]) {
         perror("bind");
         exit(2);
     }
-    std::vector<std::string> queue;
-    std::vector<struct sockaddr_in> adresses;
-    sem_t semaphore;
-    if (sem_init(&semaphore, 0, 1) != 0) {
-        std::cerr << "Semaphore init failed" << std::endl;
-        return 1;
+    for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+         if (pthread_create(&tid[i], NULL, &client_proccess, &sock) < 0) {
+              std::cout << "Couldn't create thread!/n";
+         } 
     }
+    while (1) { }
+    for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+         pthread_join(tid[i], NULL);
+    }
+    /*std::vector<std::string> queue;
+    std::vector<struct sockaddr_in> adresses;
     while (1) {
         socklen_t len = sizeof(client_address);
         bytes_read = recvfrom(sock, buf, 1024, 0,
@@ -76,9 +88,30 @@ int main(int argc, char *argv[]) {
             adresses.erase(adresses.begin());
             sem_post(&semaphore);
         }
-    }
+    }*/
     close(sock);
     return 0;
+}
+
+void* client_proccess(void* arg) {
+    int sock = *(int *)arg;
+    char buf[1024];
+    struct sockaddr_in client_address;
+    socklen_t len = sizeof(client_address);
+    while (1) {
+        int bytes_read = recvfrom(sock, buf, 1024, 0,
+            (struct sockaddr*)&client_address, &len);
+        buf[bytes_read] = '\0';
+        if (bytes_read > 0) {
+            sem_wait(&semaphore);
+            std::string answer = get_disk_size(buf);
+            std::cout << buf << "\n";
+            sendto(sock, answer.c_str(), answer.size(), 0,
+                (struct sockaddr*)&client_address, len);
+            sem_post(&semaphore);
+        }
+    }
+    return arg;
 }
 
 std::string get_disk_size(const char* path) {
