@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     std::vector<std::string> queue;
     std::vector<struct sockaddr_in> adresses;
     sem_t semaphore;
-    if (sem_init(&semaphore, 0, 1) != 0 ) {
+    if (sem_init(&semaphore, 0, 1) != 0) {
         std::cerr << "Semaphore init failed" << std::endl;
         return 1;
     }
