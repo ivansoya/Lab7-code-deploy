@@ -7,7 +7,9 @@
 #include <sys/statvfs.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <semaphore.h>
 #include <string>
+#include <vector>
 #include <iostream>
 
 std::string get_disk_size(const char* path);
@@ -41,22 +43,39 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(3425);
+    server_address.sin_port = htons(port);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
     if (bind(sock, (struct sockaddr *)&server_address,
         sizeof(server_address)) < 0) {
         perror("bind");
         exit(2);
     }
+    std::vector<std::string> queue;
+    std::vector<struct sockaddr_in> adresses;
+    sem_t semaphore;
+    if (sem_init(&semaphore, 0, 1) != 0 ) {
+        std::cerr << "Semaphore init failed" << std::endl;
+        return 1;
+    }
     while (1) {
         socklen_t len = sizeof(client_address);
         bytes_read = recvfrom(sock, buf, 1024, 0,
         (struct sockaddr *)&client_address, &len);
+        if (bytes_read > 0) {
+            adresses.push_back(client_address);
+        }
         buf[bytes_read] = '\0';
-        std::string answer = get_disk_size(buf);
-        // std::cout << answer << "\n";
-        sendto(sock, answer.c_str(), answer.size(), 0,
-            (struct sockaddr *)&client_address, len);
+        queue.push_back(buf);
+        while (queue.size() > 0) {
+            sem_wait(&semaphore);
+            std::string answer = get_disk_size(queue[0].c_str());
+            queue.erase(queue.begin());
+            std::cout << buf << "\n";
+            sendto(sock, answer.c_str(), answer.size(), 0,
+              (struct sockaddr *)&adresses[0], len);
+            adresses.erase(adresses.begin());
+            sem_post(&semaphore);
+        }
     }
     close(sock);
     return 0;
@@ -81,3 +100,4 @@ bool is_number(const std::string& str) {
     while (it != str.end() && std::isdigit(*it)) ++it;
     return !str.empty() && it == str.end();
 }
+

@@ -1,5 +1,6 @@
 // Copyright 2021 видимо, что то очень нужное для тестов
 // Author: ivansoya
+
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <stdio.h>
 #include <winsock2.h>
@@ -8,12 +9,18 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        return 1;
+    }
+    int port = atoi(argv[2]);
+    std::string ip = argv[1];
     // Initialize Winsock.
     WSADATA wsaData;
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != NO_ERROR)
+    if (iResult != NO_ERROR) {
         printf("Error at WSAStartup()\n");
+    }
     // Create a socket.
     SOCKET m_socket;
     m_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -24,9 +31,14 @@ int main() {
     }
     // Connect to a server.
     struct sockaddr_in clientService;
-    clientService.sin_family = AF_INET;
-    clientService.sin_addr.s_addr = inet_addr("192.168.0.110");
-    clientService.sin_port = htons(3425);
+    try {
+        clientService.sin_family = AF_INET;
+        clientService.sin_addr.s_addr = inet_addr(ip.c_str());
+        clientService.sin_port = htons(port);
+    }
+    catch (...) {
+        return 1;
+    }
     // Send and receive data.
     int bytesSent;
     int bytesRecv = SOCKET_ERROR;
@@ -34,8 +46,9 @@ int main() {
     std::cout << "Enter path: ";
     std::cin >> inputPath;
     char recvbuf[128] = "";
-    bytesSent = sendto(m_socket, inputPath.c_str(), inputPath.size(), 0,
-        (struct sockaddr*)&clientService, sizeof(clientService));
+    bytesSent = sendto(m_socket, inputPath.c_str(), inputPath.size(),
+        0, (struct sockaddr*)&clientService, sizeof(clientService));
+
     while (bytesRecv == SOCKET_ERROR) {
         int len = sizeof(clientService);
         bytesRecv = recvfrom(m_socket, recvbuf, 128, 0,

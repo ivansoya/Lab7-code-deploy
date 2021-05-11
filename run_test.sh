@@ -7,7 +7,7 @@
 
 test_server_build()
 {
-    g++ server.cpp -o server
+    g++ server.cpp -o server -pthread
     build_status=$?
     assertTrue "Build failed" "[ $build_status -eq 0 ]"
 }
