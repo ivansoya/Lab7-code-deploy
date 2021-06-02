@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/Lab7-code-deploy
+g++ server.cpp -pthread -o server
+./server 3425
