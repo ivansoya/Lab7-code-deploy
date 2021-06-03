@@ -19,23 +19,60 @@ jobs:
         run: bash run_test.sh
 
   continuous-deployment:
-    runs-on: ubuntu-latest
-    needs: [continuous-integration]
-    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        app-name: ['lab7']
+        s3-bucket: ['lab7-codedeploy']
+        s3-filename: ['lab7-aws-codedeploy-${{ github.sha }}']
+        deploy-group: ['Lab7DeploymentGroup']
+    needs: build
     steps:
-     # Step 1
-      - name: Configure AWS credentials
+      - uses: actions/checkout@v2
+      # set up .net core
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+      # restore packages and build
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build ProjectX --configuration Release --no-restore -o ./bin/app
+      # copying appspec file
+      - name: Copying appspec.yml
+        run: cp appspec.yml ./bin/app
+      # copying scripts
+      - name: Copying scripts
+        run: cp -R ./scripts ./bin/app/scripts
+      
+      # Install AWS CLI 2
+      - name: Install AWS CLI 2
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      # Configure AWS credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key:${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:eu-west-2
-     # Step 2
-      - name: Create CodeDeploy Deployment
-        id: deploy
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      # Deploy push to S3
+      - name: AWS Deploy push
+        run: |
+          aws deploy push \
+          --application-name ${{ matrix.app-name }} \
+          --description "Revision of the ${{ matrix.appname }}-${{ github.sha }}" \
+          --ignore-hidden-files \
+          --s3-location s3://${{ matrix.s3-bucket }}/${{ matrix.s3-filename }}.zip \
+          --source ./bin/app
+      # Creating deployment via CodeDeploy
+      - name: Creating AWS Deployment
         run: |
           aws deploy create-deployment \
-            --application-name lab7-code-deploy \
-            --deployment-group-name Lab7DeploymentGroup \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
-            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+          --application-name ${{ matrix.app-name }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ matrix.deploy-group }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ matrix.s3-bucket }},key=${{ matrix.s3-filename }}.zip,bundleType=zip \
