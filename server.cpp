@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
         perror("socket");
         exit(1);
     }
+    std::cout << "Server was started!/n";
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -58,7 +59,6 @@ int main(int argc, char *argv[]) {
         perror("bind");
         exit(2);
     }
-    std::cout << "Server was started!/n";
     for (int i = 0; i < NUMBER_OF_THREADS; i++) {
          if (pthread_create(&tid[i], NULL, &client_proccess, &sock) < 0) {
               std::cout << "Couldn't create thread!/n";
