@@ -32,15 +32,16 @@ jobs:
       # restore packages and build
       - name: Build
         run: g++ server.cpp -lpthread -o server
-      # ls dir
-      - name: Dir
-        run: ls
+        
+      # restore packages and build
+      - name: Build
+        run: cd ../
       # copying appspec file
       - name: Copying appspec.yml
-        run: cp appspec.yml /home/ubuntu/app
+        run: cp appspec.yml ./
       # copying scripts
       - name: Copying scripts
-        run: cp -R ./scripts /home/ubuntu/app/scripts
+        run: cp -R ./scripts ./scripts
       
       # Install AWS CLI 2
       - name: Install AWS CLI 2
