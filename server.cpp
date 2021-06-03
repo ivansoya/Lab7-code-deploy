@@ -64,32 +64,13 @@ int main(int argc, char *argv[]) {
               std::cout << "Couldn't create thread!/n";
          }
     }
-    while (1) { }
-    for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-         pthread_join(tid[i], NULL);
+    std::cout << "Enter \"stop\" to disable server: \n";
+    std::string stopString;
+    while (std::cin >> stopString) {
+        if (stopString == "stop") {
+            break;
+        }
     }
-    /*std::vector<std::string> queue;
-    std::vector<struct sockaddr_in> adresses;
-    while (1) {
-        socklen_t len = sizeof(client_address);
-        bytes_read = recvfrom(sock, buf, 1024, 0,
-        (struct sockaddr *)&client_address, &len);
-        if (bytes_read > 0) {
-            adresses.push_back(client_address);
-        }
-        buf[bytes_read] = '\0';
-        queue.push_back(buf);
-        while (queue.size() > 0) {
-            sem_wait(&semaphore);
-            std::string answer = get_disk_size(queue[0].c_str());
-            queue.erase(queue.begin());
-            std::cout << buf << "\n";
-            sendto(sock, answer.c_str(), answer.size(), 0,
-              (struct sockaddr *)&adresses[0], len);
-            adresses.erase(adresses.begin());
-            sem_post(&semaphore);
-        }
-    }*/
     close(sock);
     return 0;
 }
