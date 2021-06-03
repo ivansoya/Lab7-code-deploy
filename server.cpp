@@ -58,6 +58,9 @@ int main(int argc, char *argv[]) {
          }
     }
     while (1) { }
+    for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+        pthread_join(tid[i], NULL);
+    }
     close(sock);
     return 0;
 }
