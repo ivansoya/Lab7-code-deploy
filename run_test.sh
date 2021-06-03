@@ -7,7 +7,7 @@
 
 test_server_build()
 {
-    g++ server.cpp -o server -pthread
+    g++ server.cpp -lpthread -o server -pthread
     build_status=$?
     assertTrue "Build failed" "[ $build_status -eq 0 ]"
 }
@@ -41,7 +41,6 @@ test_server_configuration()
     if [[ (-n $input_file) && (-n $output_file) ]]
     then
         cat $input_file | ./sender 3425 > output1.txt
-        cat $stop_file | ${process}
         kill ${process}
         diff_lines=$(diff $output_file output1.txt | wc -l)
         #assertTrue "Test for configuration failed. Output is not correct." "[ $diff_lines -eq 0 ]"

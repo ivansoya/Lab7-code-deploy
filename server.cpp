@@ -7,7 +7,6 @@
 #include <sys/statvfs.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <semaphore.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -17,8 +16,6 @@ pthread_t tid[NUMBER_OF_THREADS];
 std::string get_disk_size(const char* path);
 bool is_number(const std::string&);
 void* client_proccess(void*);
-
-sem_t semaphore;
 
 int main(int argc, char *argv[]) {
     int port;
@@ -36,10 +33,6 @@ int main(int argc, char *argv[]) {
     port = atoi(argv[1]);
     if (port < 0 || port > 65535) {
         std::cout << "Port is Incorrect!" << std::endl;
-        return 1;
-    }
-    if (sem_init(&semaphore, 0, 1) != 0) {
-        std::cerr << "Semaphore init failed" << std::endl;
         return 1;
     }
     int sock;
@@ -64,13 +57,7 @@ int main(int argc, char *argv[]) {
               std::cout << "Couldn't create thread!/n";
          }
     }
-    std::cout << "Enter \"stop\" to disable server: \n";
-    std::string stopString;
-    while (std::cin >> stopString) {
-        if (stopString == "stop") {
-            break;
-        }
-    }
+    while (1) { }
     close(sock);
     return 0;
 }
@@ -85,13 +72,11 @@ void* client_proccess(void* arg) {
             (struct sockaddr*)&client_address, &len);
         buf[bytes_read] = '\0';
         if (bytes_read > 0) {
-            sem_wait(&semaphore);
             std::string answer = get_disk_size(buf);
             std::cout << "Request: " << buf << "\n";
             sendto(sock, answer.c_str(), answer.size(), 0,
                 (struct sockaddr*)&client_address, len);
             std::cout << "Response: " << answer << "\n";
-            sem_post(&semaphore);
         }
     }
     return arg;
