@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
         perror("bind");
         exit(2);
     }
+    std::cout << "Server was started!/n";
     for (int i = 0; i < NUMBER_OF_THREADS; i++) {
          if (pthread_create(&tid[i], NULL, &client_proccess, &sock) < 0) {
               std::cout << "Couldn't create thread!/n";
