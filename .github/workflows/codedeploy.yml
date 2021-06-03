@@ -29,9 +29,13 @@ jobs:
     needs: continuous-integration
     steps:
       - uses: actions/checkout@v2
+      # create dirs
+      - name: Mkdir
+        run: mkdir ./bin/app |
+         mkdir ./bin/app/scripts
       # restore packages and build
       - name: Build
-        run: g++ server.cpp -lpthread -o ./bin/app
+        run: g++ server.cpp -lpthread -o ./bin/app/server
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml ./bin/app
