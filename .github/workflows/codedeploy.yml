@@ -34,10 +34,10 @@ jobs:
         run: g++ server.cpp -lpthread -o server
       # copying appspec file
       - name: Copying appspec.yml
-        run: cp appspec.yml ./home/ubuntu/app
+        run: cp appspec.yml ./bin/app
       # copying scripts
       - name: Copying scripts
-        run: cp -R ./scripts ./home/ubuntu/app/scripts
+        run: cp -R ./scripts ./bin/app/scripts
       
       # Install AWS CLI 2
       - name: Install AWS CLI 2
