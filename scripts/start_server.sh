@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/ubuntu/app
+cd /home/ec2-user/app
 g++ server.cpp -pthread -o server

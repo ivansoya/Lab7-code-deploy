@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/ubuntu/app
-sudo apt-get install g++ -y
+cd /home/ec2-user/app
+sudo yum install g++ -y
