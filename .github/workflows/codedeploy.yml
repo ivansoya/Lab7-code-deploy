@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: g++ server.cpp -lpthread -o server
       - name: Run
-        run: bash ./server 3425
+        run: ./server 3425
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml ./bin/app
