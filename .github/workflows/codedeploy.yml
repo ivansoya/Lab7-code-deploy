@@ -29,16 +29,11 @@ jobs:
     needs: continuous-integration
     steps:
       - uses: actions/checkout@v2
-      # set up .net core
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.101
       # restore packages and build
       - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build ProjectX --configuration Release --no-restore -o ./bin/app
+        run: apt-get update g++
+      - name: Run
+        run: ./server 3425
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml ./bin/app
