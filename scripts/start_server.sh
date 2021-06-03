@@ -1,5 +1,3 @@
 #!/bin/bash
-cd /ubuntu/app
-sudo apt-get install g++
 g++ server.cpp -pthread -o server
 ./server 3425
