@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
         perror("socket");
         exit(1);
     }
-    std::cout << "Server was started!/n";
+    std::cout << "Server was started!\n";
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
