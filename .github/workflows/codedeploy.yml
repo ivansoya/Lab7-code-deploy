@@ -35,10 +35,11 @@ jobs:
         
       # restore packages and build
       - name: Build
-        run: cd ../
+        run: cd ./ |
+          ls
       # copying appspec file
       - name: Copying appspec.yml
-        run: cp appspec.yml ./
+        run: cp appspec.yml
       # copying scripts
       - name: Copying scripts
         run: cp -R ./scripts ./scripts
