@@ -31,9 +31,9 @@ jobs:
       - uses: actions/checkout@v2
       # restore packages and build
       - name: Install dependencies
-        run: apt-get install g++
+        run: bash sudo apt-get install g++
       - name: Run
-        run: ./server 3425
+        run: bash ./server 3425
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml ./bin/app
