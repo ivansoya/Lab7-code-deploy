@@ -19,13 +19,14 @@ jobs:
         run: bash run_test.sh
 
   continuous-deployment:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         app-name: ['lab7']
         s3-bucket: ['lab7-codedeploy']
         s3-filename: ['lab7-aws-codedeploy-${{ github.sha }}']
         deploy-group: ['Lab7DeploymentGroup']
-    needs: build
+    needs: continuous-integration
     steps:
       - uses: actions/checkout@v2
       # set up .net core
