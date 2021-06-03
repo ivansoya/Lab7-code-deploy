@@ -29,19 +29,15 @@ jobs:
     needs: continuous-integration
     steps:
       - uses: actions/checkout@v2
-      # create dirs
-      - name: Mkdir
-        run: mkdir ./bin/app |
-         mkdir ./bin/app/scripts
       # restore packages and build
       - name: Build
-        run: g++ server.cpp -lpthread -o ./bin/app/server
+        run: g++ server.cpp -lpthread -o /home/ubuntu/app/server
       # copying appspec file
       - name: Copying appspec.yml
-        run: cp appspec.yml ./bin/app
+        run: cp appspec.yml /home/ubuntu/app
       # copying scripts
       - name: Copying scripts
-        run: cp -R ./scripts ./bin/app/scripts
+        run: cp -R ./scripts /home/ubuntu/app/scripts
       
       # Install AWS CLI 2
       - name: Install AWS CLI 2
