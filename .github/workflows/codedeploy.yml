@@ -32,8 +32,6 @@ jobs:
       # restore packages and build
       - name: Build
         run: g++ server.cpp -lpthread -o server
-      - name: Run
-        run: ./server 3425
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml ./bin/app
