@@ -106,9 +106,10 @@ void* client_proccess(void* arg) {
         if (bytes_read > 0) {
             sem_wait(&semaphore);
             std::string answer = get_disk_size(buf);
-            std::cout << buf << "\n";
+            std::cout << "Request: " << buf << "\n";
             sendto(sock, answer.c_str(), answer.size(), 0,
                 (struct sockaddr*)&client_address, len);
+            std::cout << "Response: " << answer << "\n";
             sem_post(&semaphore);
         }
     }
