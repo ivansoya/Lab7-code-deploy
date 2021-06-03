@@ -15,8 +15,6 @@ int main(int argc, char *argv[]) {
     char buf[1024];
     std::string ip = argv[1];
     int port = atoi(argv[2]);
-    std::string str;
-    std::cin >> str;
     // std::cout << str << std::endl;
     int sock;
     struct sockaddr_in addr;
