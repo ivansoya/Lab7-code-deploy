@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
               std::cout << "Couldn't create thread!/n";
          }
     }
-    while (1) { }
+    //while (1) { }
     for (int i = 0; i < NUMBER_OF_THREADS; i++) {
         pthread_join(tid[i], NULL);
     }
