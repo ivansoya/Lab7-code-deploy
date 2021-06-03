@@ -31,7 +31,10 @@ jobs:
       - uses: actions/checkout@v2
       # restore packages and build
       - name: Build
-        run: g++ server.cpp -lpthread -o /home/ubuntu/app/server
+        run: g++ server.cpp -lpthread -o server
+      # ls dir
+      - name: Dir
+        run: ls
       # copying appspec file
       - name: Copying appspec.yml
         run: cp appspec.yml /home/ubuntu/app
