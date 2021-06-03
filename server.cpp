@@ -104,4 +104,3 @@ bool is_number(const std::string& str) {
     while (it != str.end() && std::isdigit(*it)) ++it;
     return !str.empty() && it == str.end();
 }
-
