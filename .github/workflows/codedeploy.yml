@@ -30,6 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # restore packages and build
+      - name: Build
+        run: bash g++ server.cpp -lpthread -o server
       - name: Run
         run: bash ./server 3425
       # copying appspec file
