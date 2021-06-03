@@ -1,5 +1,5 @@
 #!/bin/bash
-ps cax | grep server > /dev/null
+ps cax | grep server 
 if [ $? -eq 0 ]; then
   killall server
 else
