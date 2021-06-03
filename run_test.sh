@@ -32,6 +32,7 @@ test_server_configuration()
 {
     input_file='test/input.txt'
     output_file='test/output.txt'
+    stop_file='test/stop.txt'
     #echo $input_file
     #echo $output_file
     g++ sender.cpp -o sender
@@ -40,6 +41,7 @@ test_server_configuration()
     if [[ (-n $input_file) && (-n $output_file) ]]
     then
         cat $input_file | ./sender 3425 > output1.txt
+        cat $stop_file | ${process}
         kill ${process}
         diff_lines=$(diff $output_file output1.txt | wc -l)
         #assertTrue "Test for configuration failed. Output is not correct." "[ $diff_lines -eq 0 ]"
