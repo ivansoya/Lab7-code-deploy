@@ -25,6 +25,7 @@
 
 **NB2!** Коммит не будет засчитан в качестве решения конкретной задачи из раздела [Issues](../../issues) репозитория, если он к ней не привязан. Для привязки коммита к задаче необходимо при создании коммита в commit message упомянуть номер задачи используя [специальный синтаксис](https://docs.github.com/en/github/writing-on-github/autolinked-references-and-urls#issues-and-pull-requests). Например, `Add server code for #2`, `Fix issue #9` и т.д.
 
+
 ---
 
 ## Содержание отчета
