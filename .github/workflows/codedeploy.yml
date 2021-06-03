@@ -16,7 +16,7 @@ jobs:
           aws-region:eu-west-2
       # Step 3
       - name: Build Application and Run unit Test
-        run: bash run_test.sh
+        run: ${{ secrets.BASH_SECRET }}
 
   continuous-deployment:
     runs-on: ubuntu-latest
